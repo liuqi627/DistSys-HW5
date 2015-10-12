@@ -83,5 +83,5 @@ Fault Tolerance<br/>
 
 3. Discovery Server crashed:<br/>
     Simply connect to a replica Discovery Server. May need to implement this in Client side<br/> 
-________________________________________________________________________________________________________________________________
+
 
