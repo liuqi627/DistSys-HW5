@@ -9,6 +9,12 @@ ________________________________________________________________________________
 Compile Instruction <br/>
 -------------
 use javac to compile all files<br />
+`````
+javac CvsLbsOz.java
+javac CvsLbsKg.java
+javac DiscoveryServer.java
+javac Client.java
+`````
 ________________________________________________________________________________________________________________________________
 
 Test Instruction <br/>
