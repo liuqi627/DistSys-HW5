@@ -13,7 +13,7 @@ ________________________________________________________________________________
 
 Test Instruction <br/>
 -------------
-To testify our load balancing and fault tolerance work, please follow my steps for convenience:
+To testify our load balancing and fault tolerance work, please follow my steps for convenience:<br />
 1.run DiscoveryServer on port 11111:
 ``````
 java DiscoveryServer 11111
