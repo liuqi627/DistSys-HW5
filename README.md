@@ -13,7 +13,46 @@ ________________________________________________________________________________
 
 Test Instruction <br/>
 -------------
-Use Client to add/remove/lookup servers<br />
+To testify our load balancing and fault tolerance work, please follow my steps for convenience:
+1.run DiscoveryServer on port 11111:
+``````
+java DiscoveryServer 11111
+``````
+2.run Lbs<->Oz conversion server and make replica
+`````
+java CvsLbsOz 2222
+java CvsLbsOz 3333
+java CvsLbsOz 4444
+java CvsLbsOz 5555
+`````
+3.use Client to add servers we launched<br />
+``````
+java Client 127.0.0.1 11111
+add lbs oz 127.0.0.1 2222
+add lbs oz 127.0.0.1 3333
+add lbs oz 127.0.0.1 4444
+add lbs oz 127.0.0.1 5555
+``````
+4.lookup lbs oz servers, load balancing works here, the return value varies according to Round Robin
+``````
+look up lbs oz
+look up lbs oz
+look up lbs oz
+look up lbs oz
+look up lbs oz
+look up lbs oz
+``````
+5.shut down 127.0.0.1 2222, here we simply close the console listening on port 2222<br />
+6.lookup lbs oz servers, the "127.0.0.1 2222" server should disappear
+``````
+look up lbs oz
+look up lbs oz
+look up lbs oz
+look up lbs oz
+look up lbs oz
+look up lbs oz
+``````
+
 ________________________________________________________________________________________________________________________________
 
 Load Balancing<br/>
