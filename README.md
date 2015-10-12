@@ -82,6 +82,6 @@ Fault Tolerance<br/>
     the resolution is pretty the same with situation 1;
 
 3. Discovery Server crashed:<br/>
-    Simply connect to a replica Discovery Server. May need to implement this in Client side<br/> 
+    For Discovery Server, we have two: master and backup. When the master node crashes, simply connect to the backup Discovery Server. May need to implement this in Client side<br/> 
 
 
