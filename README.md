@@ -27,6 +27,7 @@ Fault Tolerance<br/>
 ---------------
 1. Conversion Server crashed:<br/>
     When the client send LOOKUP command. Before we return a server, we check its availability. If it's alive, return the alive one. If it's crashed(timeout or no responding or response wrong ack info), try the next one in the list, until we get an alive one. Or we indicate "none is available for this type of service" if all servers are down.<br/> 
+    We use a HashMap(key:conversion type, value:index to return) to record which server to use next.
 
 2. Proxy Server crashed:<br/>
     Proxy Server may not work for 3 reasons:<br/>
@@ -34,5 +35,8 @@ Fault Tolerance<br/>
     (2)proxy server itself is down;<br />
     (3)conversion server and proxy server are all down;<br />
     the resolution is pretty the same with situation 1;
+
+3. Discovery Server crashed:<br/>
+    Simply connect to a replica Discovery Server. May need to implement this in Client side<br/> 
 ________________________________________________________________________________________________________________________________
 
