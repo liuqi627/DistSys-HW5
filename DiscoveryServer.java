@@ -141,6 +141,7 @@ public class DiscoveryServer {
         clientSocket.close();
     }
     
+    //Fault tolerant happens here!!!
     public static boolean isWorking(String ip, String port){
     	try{
             Socket socket = new Socket(ip, Integer.valueOf(port));
@@ -163,6 +164,7 @@ public class DiscoveryServer {
         }
     }
     
+    //Load Balancing and fault tolerance happens here!!!
     public static String getServer(String str){
     	if(loadBalancingTable.containsKey(str)){
     		Integer integer = loadBalancingTable.get(str);
