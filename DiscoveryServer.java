@@ -126,13 +126,13 @@ public class DiscoveryServer {
                 }
                 else{
                 	out.println("[SUCCESS] " + str);
-                    System.out.println("[SUCCESS] success lookup " + str);
+                    System.out.println("[SUCCESS] " + str);
                 }
             }
             else
             {
-                out.println("none");
-                System.out.println("failed lookup");
+                out.println("[FAILURE] none");
+                System.out.println("[FAILURE] none");
             }
             
         }
@@ -144,11 +144,18 @@ public class DiscoveryServer {
     public static boolean isWorking(String ip, String port){
     	try{
             Socket socket = new Socket(ip, Integer.valueOf(port));
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             out.println("check");
-            out.close();
-            socket.close();
-            return true;
+            String response = in.readLine();
+            response = in.readLine();
+            if(response.equals("ack")){
+                in.close();
+                out.close();
+                socket.close();
+                return true;
+            }
+            return false;
         }
         catch(Exception e){
             System.out.println("server down");
@@ -176,6 +183,7 @@ public class DiscoveryServer {
         	}
         	else{
         		index++;
+        		index = index%numOfServers;
         	}
     	}
     	return "AllCrashed";
