@@ -30,9 +30,9 @@ Fault Tolerance<br/>
 
 2. Proxy Server crashed:<br/>
     Proxy Server may not work for 3 reasons:<br/>
-    (1)conversion servers related are down;
-    (2)proxy server itself is down;
-    (2)conversion server and proxy server are all down;
+    (1)conversion servers related are down;<br />
+    (2)proxy server itself is down;<br />
+    (3)conversion server and proxy server are all down;<br />
     the resolution is pretty the same with situation 1;
 ________________________________________________________________________________________________________________________________
 
