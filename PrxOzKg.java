@@ -8,29 +8,9 @@ import java.net.UnknownHostException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class Proxy {
+public class PrxOzKg {
     
-    public static boolean isWorking(String ip, String port){
-    	try{
-            Socket socket = new Socket(ip, Integer.valueOf(port));
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println("check");
-            String response = in.readLine();
-            response = in.readLine();
-            if(response.equals("ack")){
-                in.close();
-                out.close();
-                socket.close();
-                return true;
-            }
-            return false;
-        }
-        catch(Exception e){
-            System.out.println("server down");
-            return false;
-        }
-    }
+    
 
     public static void process (Socket clientSocket) throws IOException {
         // open up IO streams
@@ -53,7 +33,6 @@ public class Proxy {
         String[] tokens = userInput.split(" ");
         //to test if the related two conversion servers work
         if(tokens[0].equals("check")){
-            
             if(isWorking("127.0.0.1","1234") && isWorking("127.0.0.1","2345")){
                 out.println("ack");
             }
@@ -64,7 +43,6 @@ public class Proxy {
                 in.close();
                 clientSocket.close();
                 return;
-            
         }
         
         
@@ -74,16 +52,18 @@ public class Proxy {
         Double result = null;
         String result1, result2;
         String transitUnit = "lbs";
+        Socket socket1,socket2;
         
-        if(inputUnit.equals("ounces") && outputUnit.equals("kg"))
+        if(inputUnit.equals("oz") && outputUnit.equals("kg"))
         {
-            Socket socket1 = new Socket("127.0.0.1", 1234);
-            Socket socket2 = new Socket("127.0.0.1", 2345);
+            socket1 = new Socket("127.0.0.1", 1234);
+            socket2 = new Socket("127.0.0.1", 2345);
         }
-        else if(inputUnit.equals("kg")) && outputUnit.equals("ounces")
+        else
+        	//(inputUnit.equals("kg") && outputUnit.equals("oz"))
         {
-            Socket socket1 = new Socket("127.0.0.1", 2345);
-            Socket socket2 = new Socket("127.0.0.1", 1234);
+            socket1 = new Socket("127.0.0.1", 2345);
+            socket2 = new Socket("127.0.0.1", 1234);
         }
         
         PrintWriter out1 = new PrintWriter(socket1.getOutputStream(), true);
@@ -146,5 +126,29 @@ public class Proxy {
         }
         System.exit(0);
     }
+    
+    public static boolean isWorking(String ip, String port){
+    	try{
+            Socket socket = new Socket(ip, Integer.valueOf(port));
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            out.println("check");
+            String response = in.readLine();
+            response = in.readLine();
+            if(response.equals("ack")){
+                in.close();
+                out.close();
+                socket.close();
+                return true;
+            }
+            socket.close();
+            return false;
+        }
+        catch(Exception e){
+            System.out.println("server down");
+            return false;
+        }
+    }
 }
+
 
