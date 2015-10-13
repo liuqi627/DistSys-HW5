@@ -10,7 +10,9 @@ import java.io.InputStreamReader;
 
 public class PrxOzKg {
     
-    
+    public static int port;
+    public static int lbsKg;
+    public static int lbsOz;
 
     public static void process (Socket clientSocket) throws IOException {
         // open up IO streams
@@ -18,7 +20,7 @@ public class PrxOzKg {
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
         /* Write a welcome message to the client */
-        out.println("Welcome to the Ounces (ounces) to Kilograms (kg) conversion server!");
+        out.println("Welcome to the Ounces (oz) to Kilograms (kg) conversion server!");
 
         /* read and print the client's request */
         // readLine() blocks until the server receives a new line from client
@@ -33,7 +35,7 @@ public class PrxOzKg {
         String[] tokens = userInput.split(" ");
         //to test if the related two conversion servers work
         if(tokens[0].equals("check")){
-            if(isWorking("127.0.0.1","1234") && isWorking("127.0.0.1","2345")){
+            if(isWorking("127.0.0.1",String.valueOf(lbsKg)) && isWorking("127.0.0.1",String.valueOf(lbsOz))){
                 out.println("ack");
             }
             else{
@@ -52,24 +54,27 @@ public class PrxOzKg {
         Double result = null;
         String result1, result2;
         String transitUnit = "lbs";
-        Socket socket1,socket2;
+        Socket socket1,socket2; 
         
         if(inputUnit.equals("oz") && outputUnit.equals("kg"))
         {
-            socket1 = new Socket("127.0.0.1", 1234);
-            socket2 = new Socket("127.0.0.1", 2345);
+            socket1 = new Socket("127.0.0.1", lbsOz);
+            socket2 = new Socket("127.0.0.1", lbsKg);
+            System.out.println("in first if");
+            
         }
         else
         	//(inputUnit.equals("kg") && outputUnit.equals("oz"))
         {
-            socket1 = new Socket("127.0.0.1", 2345);
-            socket2 = new Socket("127.0.0.1", 1234);
+            socket1 = new Socket("127.0.0.1", lbsKg);
+            socket2 = new Socket("127.0.0.1", lbsOz);
+            System.out.println("in second if");
         }
         
         PrintWriter out1 = new PrintWriter(socket1.getOutputStream(), true);
         BufferedReader in1 = new BufferedReader(new InputStreamReader(socket1.getInputStream()));
         out1.println(inputUnit + " " + transitUnit + " " + number.toString());
-        if ((result1 = in.readLine()) == null) {
+        if ((result1 = in1.readLine()) == null) {
             System.out.println("Error reading message");
             out1.close();
             in1.close();
@@ -81,7 +86,7 @@ public class PrxOzKg {
         PrintWriter out2 = new PrintWriter(socket2.getOutputStream(), true);
         BufferedReader in2 = new BufferedReader(new InputStreamReader(socket2.getInputStream()));
         out2.println(transitUnit + " " + outputUnit + " " + result1);
-        if ((result2 = in.readLine()) == null) {
+        if ((result2 = in2.readLine()) == null) {
             System.out.println("Error reading message");
             out2.close();
             in2.close();
@@ -104,20 +109,26 @@ public class PrxOzKg {
     public static void main(String[] args) throws Exception {
 
         //check if argument length is invalid
-        if(args.length != 1) {
-            System.err.println("Usage: java ConvServer port");
+        if(args.length != 3) {
+            System.err.println("Input like this: java PrxOzKg <ProxyServer Port> <Lbs<->Oz Port> <Lbs<->Kg Port>");
+            System.exit(1);
         }
+        port = Integer.valueOf(args[0]);
+        lbsOz = Integer.valueOf(args[1]);
+        lbsKg = Integer.valueOf(args[2]);
+        
+        //init(port);
+        
         // create socket
-        int port = Integer.parseInt(args[0]);
         ServerSocket serverSocket = new ServerSocket(port);
-        System.err.println("Proxy Server started server on port " + port);
+        System.out.println("Proxy Server started server on port " + port);
 
         // wait for connections, and process
         try {
              while(true){
                 // a "blocking" call which waits until a connection is requested
                 Socket clientSocket = serverSocket.accept();
-                System.err.println("\nAccepted connection from client");
+                System.out.println("\nAccepted connection from client");
                 process(clientSocket);
             }
 
@@ -149,6 +160,42 @@ public class PrxOzKg {
             return false;
         }
     }
+    
+    public static void init(int port) throws Exception{
+    	Socket socketDiscovery = new Socket("127.0.0.1", 11111);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socketDiscovery.getInputStream()));
+        PrintWriter out = new PrintWriter(socketDiscovery.getOutputStream(), true);
+        out.println("add" + " " + "kg" + " " + "oz" + " " + "127.0.0.1" + " " + String.valueOf(port));
+        String temp = in.readLine();
+        temp = in.readLine();
+        in.close();
+        out.close();
+        socketDiscovery.close();
+        attachShutDownHook();
+    }
+    
+    public static void attachShutDownHook() throws Exception{
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+          @Override
+          public void run() {
+        	  try{
+        		  Socket socketDiscovery = new Socket("127.0.0.1", 11111);
+                  BufferedReader in = new BufferedReader(new InputStreamReader(socketDiscovery.getInputStream()));
+                  PrintWriter out = new PrintWriter(socketDiscovery.getOutputStream(), true);
+                  out.println("remove" + " " + "127.0.0.1" + " " + String.valueOf(port));
+                  String temp = in.readLine();
+                  temp = in.readLine();
+                  in.close();
+                  out.close();
+                  socketDiscovery.close();
+        	  }
+        	  catch(Exception e){
+        		  System.out.println("connection to discovery server failed!");
+        	  }
+        	  
+          }
+        });
+      }
 }
 
 

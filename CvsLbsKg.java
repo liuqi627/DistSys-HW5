@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class CvsLbsKg {
+	
+	public static int port;
 
     public static void process (Socket clientSocket) throws IOException {
         // open up IO streams
@@ -73,8 +75,12 @@ public class CvsLbsKg {
             System.err.println("Usage: java ConvServer port");
         }
         // create socket
-        int port = Integer.parseInt(args[0]);
+        port = Integer.parseInt(args[0]);
         ServerSocket serverSocket = new ServerSocket(port);
+        
+      //this init() is to tell discoveryServer I launched
+        init(port);
+        
         System.err.println("Started server on port " + port);
 
         // wait for connections, and process
@@ -91,6 +97,42 @@ public class CvsLbsKg {
         }
         System.exit(0);
     }
+    public static void init(int port) throws Exception{
+    	Socket socketDiscovery = new Socket("127.0.0.1", 11111);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socketDiscovery.getInputStream()));
+        PrintWriter out = new PrintWriter(socketDiscovery.getOutputStream(), true);
+        out.println("add" + " " + "lbs" + " " + "kg" + " " + "127.0.0.1" + " " + String.valueOf(port));
+        String temp = in.readLine();
+        temp = in.readLine();
+        in.close();
+        out.close();
+        socketDiscovery.close();
+        attachShutDownHook();
+    }
+    
+    public static void attachShutDownHook() throws Exception{
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+          @Override
+          public void run() {
+        	  try{
+        		  Socket socketDiscovery = new Socket("127.0.0.1", 11111);
+                  BufferedReader in = new BufferedReader(new InputStreamReader(socketDiscovery.getInputStream()));
+                  PrintWriter out = new PrintWriter(socketDiscovery.getOutputStream(), true);
+                  out.println("remove" + " " + "127.0.0.1" + " " + String.valueOf(port));
+                  String temp = in.readLine();
+                  temp = in.readLine();
+                  in.close();
+                  out.close();
+                  socketDiscovery.close();
+        	  }
+        	  catch(Exception e){
+        		  System.out.println("connection to discovery server failed!");
+        	  }
+        	  
+          }
+        });
+      }
 }
+
 
 
