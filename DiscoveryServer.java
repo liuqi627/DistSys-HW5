@@ -35,6 +35,7 @@ public class DiscoveryServer {
         String command = a[0];
         if(command.equals("ADD") || command.equals("Add") || command.equals("add"))
         {
+        	if(clientSocket.getLocalPort() == 11111){tellStandBy(22222, input);}//tell standby server to update the table when adding and removing
             //add
             String unit1 = a[1];
             String unit2 = a[2];
@@ -72,6 +73,7 @@ public class DiscoveryServer {
         
         if(command.equals("REMOVE") || command.equals("Remove") || command.equals("remove"))
         {
+        	if(clientSocket.getLocalPort() == 11111){tellStandBy(22222, input);}
             //remove
             String ip = a[1];
             String port = a[2];
@@ -213,8 +215,17 @@ public class DiscoveryServer {
                 // a "blocking" call which waits until a connection is requested
                 Socket clientSocket = serverSocket.accept();
                 System.err.println("\nAccepted connection from client");
+                if(clientSocket.getPort() == 11111)//here I'm standby, master wants to tell me something to update the table
+                {
+                	BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                	String commandLine = in.readLine();
+                	ImStandBy(commandLine);
+                	in.close();
+                	clientSocket.close();
+                	continue;
+                }
                 process(clientSocket);
-                System.err.println("this while loop is ended");
+                //System.err.println("this while loop is ended");
             }
 
         }catch (IOException e) {
@@ -222,7 +233,137 @@ public class DiscoveryServer {
         }
         System.exit(0);
     }
+    //standby server to update its table in case of master not crashes
+    public static void tellStandBy(int standByPort, String command) throws IOException{
+        BufferedReader in;
+        PrintWriter out;
+        try{
+            Socket sckt = new Socket("127.0.0.1", standByPort);
+            in = new BufferedReader(new InputStreamReader(sckt.getInputStream()));
+            out = new PrintWriter(sckt.getOutputStream(), true);
+            in.readLine();
+            out.println(command);
+            in.close();
+            out.close();
+            sckt.close();
+        }
+        catch(Exception e){
+            System.out.println("StandBy Server failed to respond");
+        }
+    }
+    
+    public static void ImStandBy(String commandLine){
+    	String a[] = commandLine.split(" ");
+        String command = a[0];
+        if(command.equals("ADD") || command.equals("Add") || command.equals("add"))
+        {
+            //add
+            String unit1 = a[1];
+            String unit2 = a[2];
+            String ip = a[3];
+            String port = a[4];
+            String key1 = unit1 + "-" + unit2;
+            String key1_alter = unit2 + "-" + unit1;
+            String value1 = ip + "-" + port;
+            String realKey = null;
+            if(table.containsKey(key1)){
+            	realKey = key1;
+            }
+            if(table.containsKey(key1_alter)){
+            	realKey = key1_alter;
+            }
+            if(realKey != null){
+            	if(table.get(realKey).contains(value1)){
+            		//out.println("[FAILURE] already exists");
+            		System.out.println("[FAILURE] already exists");
+            	}
+            	else{
+            		table.get(realKey).add(value1);
+            		//out.println("[SUCCESS] add new server");
+                    System.out.println("[SUCCESS] add new server");
+            	}
+            }
+            else if(realKey == null){
+            	ArrayList<String> al = new ArrayList<String>();
+            	al.add(value1);
+                table.put(key1,al);
+                //out.println("[SUCCESS] add new conversion type");
+                System.out.println("[SUCCESS] add new conversion type");
+            }
+        }
+        
+        if(command.equals("REMOVE") || command.equals("Remove") || command.equals("remove"))
+        {
+            //remove
+            String ip = a[1];
+            String port = a[2];
+            String value1 = ip + "-" + port;
+            Iterator<Map.Entry<String, ArrayList<String>>> it = table.entrySet().iterator();  
+            while(it.hasNext())
+            { 
+                Map.Entry<String, ArrayList<String>> entry=it.next();  
+                ArrayList<String> value2 = entry.getValue();  
+                if(value2.contains(value1) && value2.size() == 1){  
+                    it.remove();        //OK   
+                    //out.println("[SUCCESS] remove service");
+                    System.out.println("[SUCCESS] remove service");
+                    //out.close();
+                    //in.close();
+                    //clientSocket.close();
+                    return;
+                }  
+                else if(value2.contains(value1) && value2.size() > 1){
+                	value2.remove(value1);
+                	entry.setValue(value2);
+                	//out.println("[SUCCESS] remove server");
+                    System.out.println("[SUCCESS] remove server");
+                	//out.close();
+                    //in.close();
+                    //clientSocket.close();
+                    return;
+                }
+            }
+            //out.println("[FAILURE] no such ip-port pairs");
+            System.out.println("[FAILURE] no such ip-port pairs");
+        }
+        if(command.equals("LOOKUP") || command.equals("Lookup") || command.equals("lookup"))
+        {
+            String unit1 = a[1];
+            String unit2 = a[2];
+            String key1 = unit1 + "-" + unit2;
+            String key1_alter = unit2 + "-" + unit1;
+            String realKey = null;
+            if(table.containsKey(key1)){
+            	realKey = key1;
+            }
+            if(table.containsKey(key1_alter)){
+            	realKey = key1_alter;
+            }
+            if(realKey != null)
+            {
+                String str = getServer(realKey);
+                if(str.equals("AllCrashed")){
+                	//out.println("[FAILURE] no server responding");
+                	System.out.println("[FAILURE] no server responding");
+                }
+                else{
+                	//out.println("[SUCCESS] " + str);
+                    System.out.println("[SUCCESS] " + str);
+                }
+            }
+            else
+            {
+                //out.println("[FAILURE] none");
+                System.out.println("[FAILURE] none");
+            }
+            
+        }
+        //out.close();
+        //in.close();
+        //clientSocket.close();
+    }
 }
+
 
 
 
