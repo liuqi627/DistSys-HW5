@@ -60,7 +60,6 @@ public class PrxOzKg {
         {
             socket1 = new Socket("127.0.0.1", lbsOz);
             socket2 = new Socket("127.0.0.1", lbsKg);
-            System.out.println("in first if");
             
         }
         else
@@ -68,7 +67,6 @@ public class PrxOzKg {
         {
             socket1 = new Socket("127.0.0.1", lbsKg);
             socket2 = new Socket("127.0.0.1", lbsOz);
-            System.out.println("in second if");
         }
         
         PrintWriter out1 = new PrintWriter(socket1.getOutputStream(), true);
@@ -117,7 +115,7 @@ public class PrxOzKg {
         lbsOz = Integer.valueOf(args[1]);
         lbsKg = Integer.valueOf(args[2]);
         
-        //init(port);
+        init(port);
         
         // create socket
         ServerSocket serverSocket = new ServerSocket(port);
