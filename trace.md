@@ -96,3 +96,31 @@ Received message: check
 Accepted connection from client
 Received message: lbs oz 12
 `````
+
+Telnet:<br/>
+`````
+liuqi627: ~ $ telnet localhost 22222
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+Welcome, please enter command
+lookup lbs oz
+[SUCCESS] 127.0.0.1 5555
+Connection closed by foreign host.
+liuqi627: ~ $ telnet localhost 22222
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+Welcome, please enter command
+lookup lbs oz
+[SUCCESS] 127.0.0.1 2222
+Connection closed by foreign host.
+liuqi627: ~ $ telnet localhost 22222
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+Welcome, please enter command
+lookup lbs oz
+[SUCCESS] 127.0.0.1 5555
+Connection closed by foreign host.
+``````
