@@ -1,4 +1,5 @@
-<h2>Client:<br/><h2/>
+Client:<br/>
+`````````
 liuqi627: ~/hw5/DistSys-HW5 $ java Client 127.0.0.1 11111<br/>
 Now you can type your command...(format: <unit1> <unit2> <amount>)<br/>
 lbs oz 12<br/>
@@ -21,10 +22,10 @@ Connection to conversion server created!<br/>
 the amount is: 1.3636363636363635<br/>
  
 Now you can type your command...<br/>
- 
+ ``````
 
-<h2>DiscoveryServer(master):<br/><h2/>
-
+DiscoveryServer(master):<br/>
+`````
 Started server on port 11111<br/>
  
 Accepted connection from client<br/>
@@ -48,7 +49,9 @@ input is add lbs oz 127.0.0.1 5555<br/>
 this while loop is ended<br/>
 ^Cliuqi627: ~/hw5/DistSys-HW5 $  <br/>
 
-<h2>DiscoveryServer(standby):<h2/><br/>
+`````
+DiscoveryServer(standby):<br/>
+`````
 Started server on port 22222<br/>
  
 Accepted connection from client<br/>
@@ -68,8 +71,10 @@ this while loop is ended<br/>
  
 Accepted connection from client<br/>
 input is lookup lbs kg<br/>
+``````
 
-<h2>ConversionServer(lbs <-> kg):<h2/><br/>
+ConversionServer(lbs <-> kg):<br/>
+`````
 liuqi627: ~/hw5/DistSys-HW5 $ java CvsLbsKg 3333<br/>
 Started server on port 3333<br/>
  
@@ -78,8 +83,10 @@ Received message: check<br/>
  
 Accepted connection from client<br/>
 Received message: lbs kg 3<br/>
+`````
 
 ConversionServer(lbs <-> oz):<br/>
+`````
 liuqi627: ~/hw5/DistSys-HW5 $ java CvsLbsOz 2222<br/>
 Started server on port 2222<br/>
  
@@ -88,4 +95,4 @@ Received message: check<br/>
  
 Accepted connection from client<br/>
 Received message: lbs oz 12<br/>
-
+`````
