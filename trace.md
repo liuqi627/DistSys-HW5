@@ -1,9 +1,9 @@
 Client:<br/>
 `````````
-liuqi627: ~/hw5/DistSys-HW5 $ java Client 127.0.0.1 11111<br/>
-Now you can type your command...(format: <unit1> <unit2> <amount>)<br/>
-lbs oz 12<br/>
-Connection to discovery server created!<br/>
+liuqi627: ~/hw5/DistSys-HW5 $ java Client 127.0.0.1 11111
+Now you can type your command...(format: <unit1> <unit2> <amount>)
+lbs oz 12
+Connection to discovery server created!
  
 ip and port are: 127.0.0.1 2222<br/>
 Connection to conversion server created!<br/>
