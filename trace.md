@@ -1,4 +1,4 @@
-<h1>Client:<br/>
+<h2>Client:<br/><h2>
 liuqi627: ~/hw5/DistSys-HW5 $ java Client 127.0.0.1 11111<br/>
 Now you can type your command...(format: <unit1> <unit2> <amount>)<br/>
 lbs oz 12<br/>
@@ -23,7 +23,7 @@ the amount is: 1.3636363636363635<br/>
 Now you can type your command...<br/>
  
 
-DiscoveryServer(master):<br/>
+<h2>DiscoveryServer(master):<br/><h2/>
 
 Started server on port 11111<br/>
  
@@ -48,7 +48,7 @@ input is add lbs oz 127.0.0.1 5555<br/>
 this while loop is ended<br/>
 ^Cliuqi627: ~/hw5/DistSys-HW5 $  <br/>
 
-DiscoveryServer(standby):<br/>
+<h2>DiscoveryServer(standby):<h2/><br/>
 Started server on port 22222<br/>
  
 Accepted connection from client<br/>
@@ -69,7 +69,7 @@ this while loop is ended<br/>
 Accepted connection from client<br/>
 input is lookup lbs kg<br/>
 
-ConversionServer(lbs <-> kg):<br/>
+<h2>ConversionServer(lbs <-> kg):<h2/><br/>
 liuqi627: ~/hw5/DistSys-HW5 $ java CvsLbsKg 3333<br/>
 Started server on port 3333<br/>
  
