@@ -1,4 +1,4 @@
-Client:<br/>
+<h1>Client:<br/>
 liuqi627: ~/hw5/DistSys-HW5 $ java Client 127.0.0.1 11111<br/>
 Now you can type your command...(format: <unit1> <unit2> <amount>)<br/>
 lbs oz 12<br/>
